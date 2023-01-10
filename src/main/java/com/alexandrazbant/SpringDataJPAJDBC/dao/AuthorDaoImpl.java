@@ -1,8 +1,6 @@
 package com.alexandrazbant.SpringDataJPAJDBC.dao;
 
 import com.alexandrazbant.SpringDataJPAJDBC.domain.Author;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -61,7 +59,6 @@ public class AuthorDaoImpl implements AuthorDao {
         } finally {
             try {
                 closeAll(resultSet, ps, connection);
-
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -93,7 +90,6 @@ public class AuthorDaoImpl implements AuthorDao {
         } finally {
             try {
                 closeAll(resultSet, ps, connection);
-
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -116,13 +112,31 @@ public class AuthorDaoImpl implements AuthorDao {
             e.printStackTrace();
         } finally {
             try {
-                closeAll(resultSet, ps, connection);
-
+                closeAll(null, ps, connection);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
         return this.getId(author.getId());
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        try {
+            connection = source.getConnection();
+            ps = connection.prepareStatement("DELETE FROM author WHERE id = ?");
+            ps.setLong(1, id);
+            ps.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                closeAll(null, ps, connection);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private Author getAuthorFromRS(ResultSet resultSet) throws SQLException {
