@@ -39,4 +39,14 @@ public class AuthorDaoIntegrationTest {
         Author author = authorDao.getByName("Craig", "Walls");
         assertThat(author).isNotNull();
     }
+
+    @Test
+    void testSaveNewAuthor(){
+        Author author = new Author();
+        author.setFirstName("Alexandra");
+        author.setLastName("Zbant");
+        Author savedAuthor = authorDao.saveNew(author);
+
+        assertThat(savedAuthor).isNotNull();
+    }
 }
