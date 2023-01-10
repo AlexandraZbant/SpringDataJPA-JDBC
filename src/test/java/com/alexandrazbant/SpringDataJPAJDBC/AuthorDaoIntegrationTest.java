@@ -50,6 +50,7 @@ public class AuthorDaoIntegrationTest {
         assertThat(savedAuthor).isNotNull();
     }
 
+
     @Test
     void testUpdateAuthor(){
         Author author = new Author();
@@ -62,6 +63,7 @@ public class AuthorDaoIntegrationTest {
 
         assertThat(updatedAuthor.getLastName()).isEqualTo("Zbant");
     }
+
 
     @Test
     void testDeleteAuthor(){
