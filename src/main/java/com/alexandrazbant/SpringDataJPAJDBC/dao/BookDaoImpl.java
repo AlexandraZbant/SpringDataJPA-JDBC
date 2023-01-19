@@ -1,20 +1,21 @@
 package com.alexandrazbant.SpringDataJPAJDBC.dao;
 
-import com.alexandrazbant.SpringDataJPAJDBC.domain.Author;
 import com.alexandrazbant.SpringDataJPAJDBC.domain.Book;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import javax.xml.transform.Source;
 import java.sql.*;
 
 @Component
 public class BookDaoImpl implements BookDao {
 
-    DataSource source;
+    private final DataSource source;
+    private final AuthorDao authorDao;
 
-    public BookDaoImpl(DataSource source) {
+    public BookDaoImpl(DataSource source, AuthorDao authorDao) {
         this.source = source;
+        this.authorDao = authorDao;
     }
 
     Connection connection = null;
@@ -74,7 +75,11 @@ public class BookDaoImpl implements BookDao {
             ps.setString(1, book.getTitle());
             ps.setString(2, book.getIsbn());
             ps.setString(3, book.getPublisher());
-            ps.setLong(4, book.getAuthorId());
+            if(book.getAuthorId() != null) {
+                ps.setLong(4, book.getAuthorId().getId());
+            }else {
+                ps.setNull(4, -5);
+            }
             ps.execute();
 
             Statement statement = connection.createStatement();
@@ -146,7 +151,7 @@ public class BookDaoImpl implements BookDao {
         book.setTitle(resultSet.getString("title"));
         book.setIsbn(resultSet.getString("isbn"));
         book.setPublisher(resultSet.getString("publisher"));
-        book.setAuthorId(resultSet.getLong("author_id"));
+        book.setAuthorId(authorDao.getId(resultSet.getLong("author_id")));
         return book;
     }
 

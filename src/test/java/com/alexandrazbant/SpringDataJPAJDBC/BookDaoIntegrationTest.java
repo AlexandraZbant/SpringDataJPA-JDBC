@@ -20,6 +20,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class BookDaoIntegrationTest {
 
     @Autowired
+    AuthorDao authorDao;
+    @Autowired
     BookDao bookDao;
 
     @Test
@@ -40,7 +42,9 @@ public class BookDaoIntegrationTest {
         book.setTitle("DDD");
         book.setIsbn("123365");
         book.setPublisher("DAO");
-        book.setAuthorId(2L);
+        Author author = new Author();
+        author.setId(2L);
+        book.setAuthorId(author);
         Book savedBook = bookDao.saveNew(book);
 
         assertThat(savedBook).isNotNull();
@@ -52,11 +56,17 @@ public class BookDaoIntegrationTest {
         book.setTitle("blablabla");
         book.setIsbn("123365");
         book.setPublisher("DAO");
-        book.setAuthorId(2L);
+        Author author = new Author();
+        author.setId(2L);
+        book.setAuthorId(author);
+
         Book savedBook = bookDao.saveNew(book);
 
         savedBook.setTitle("DDD");
+
         Book updatedBook = bookDao.update(savedBook);
+
+        bookDao.getById(updatedBook.getId());
 
         assertThat(updatedBook.getTitle()).isEqualTo("DDD");
     }
@@ -67,7 +77,6 @@ public class BookDaoIntegrationTest {
         book.setTitle("blablabla");
         book.setIsbn("123365");
         book.setPublisher("DAO");
-        book.setAuthorId(2L);
         Book savedBook = bookDao.saveNew(book);
         bookDao.deleteById(savedBook.getId());
         Book deletedBook = bookDao.getById(savedBook.getId());
