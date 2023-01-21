@@ -14,6 +14,6 @@ public class AuthorMapper implements RowMapper<Author> {
         author.setId(rs.getLong("id"));
         author.setFirstName(rs.getString("first_name"));
         author.setLastName(rs.getString("last_name"));
-        return null;
+        return author;
     }
 }
